@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import authRoutes from "./modules/auth/auth.routes.js"
+import projectRoutes from "./modules/projects/projects.routes.js"
 
 const app = express()
 
@@ -16,4 +17,9 @@ app.get("/api/health",(req,res)=>{
 })
 
 app.use("/api/auth",authRoutes)
+
+app.use("/api/projects",projectRoutes)
+
+
+
 export default app

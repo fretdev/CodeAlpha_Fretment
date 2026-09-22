@@ -1,0 +1,18 @@
+### Create project
+POST http://localhost:5000/api/projects
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "name": "Fretment Development",
+  "description": "Building the Fretment project management platform",
+  "color": "#571244"
+}
+
+### Get my projects
+GET http://localhost:5000/api/projects
+AAuthorization: Bearer YOUR_ACCESS_TOKEN
+
+### Get Project
+GET http://localhost:5000/api/projects/1
+Authorization: Bearer YOUR_ACCESS_TOKEN
