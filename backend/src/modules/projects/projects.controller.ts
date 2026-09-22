@@ -1,5 +1,5 @@
 import { Request,Response } from "express";
-import { createProject,getUserProjects,getProjectById} from "./projects.service.js";
+import { createProject,getUserProjects,getProjectById,updateProject,deleteProject,getProjectMembers,addProjectMember,removeProjectMember} from "./projects.service.js";
 
 
 export const create = async (req:Request,res:Response)=>{
@@ -80,3 +80,309 @@ export const getProject = async (req:Request,res:Response)=>{
         })
     }
 }
+
+export const update = async (req: Request, res: Response) => {
+    try {
+        const projectId = Number(req.params.id);
+        const { name, description, color } = req.body;
+        const userId = req.userId;
+
+        if (!Number.isInteger(projectId) || projectId <= 0) {
+            return res.status(400).json({
+                message: "Invalid project ID",
+            });
+        }
+
+        if (userId === undefined) {
+            return res.status(401).json({
+                message: "Authentication required",
+            });
+        }
+
+        const result = await updateProject({
+            projectId,
+            userId,
+            name,
+            description,
+            color,
+        });
+
+        return res.status(200).json({
+            message: "Project updated successfully",
+            project: result,
+        });
+    } catch (error) {
+        if (error instanceof Error && error.message === "Project does not exist") {
+            return res.status(404).json({
+                message: error.message,
+            });
+        }
+
+        if (error instanceof Error && error.message === "You are not a member of this project") {
+            return res.status(403).json({
+                message: error.message,
+            });
+        }
+
+        if (error instanceof Error && error.message === "Only the project owner can update this project") {
+            return res.status(403).json({
+                message: error.message,
+            });
+        }
+
+        return res.status(500).json({
+            message: "Something went wrong",
+        });
+    }
+}
+
+export const removeProject = async (req:Request,res:Response)=>{
+    try{
+        const projectId = Number(req.params.id)
+
+        if(!Number.isInteger(projectId) || projectId <= 0){
+            return res.status(400).json({
+                message: "Invalid project ID"
+            })
+        }
+
+        if(req.userId === undefined){
+            return res.status(401).json({
+                message: "Authentication required"
+            })
+        }
+
+        await deleteProject(projectId,req.userId)
+
+        return res.status(200).json({
+           message: "Project deleted successfully"
+        })
+    } catch(error){
+        if(error instanceof Error && error.message === "Project does not exist"){
+            return res.status(404).json({
+                message: error.message
+            })
+        }
+        if(error instanceof Error && error.message === "You are not a member of this project"){
+            return res.status(403).json({
+                message: error.message
+            })
+        }
+        if(error instanceof Error && error.message === "Only the project owner can delete this project"){
+            return res.status(403).json({
+                message: error.message
+            })
+        }
+
+        return res.status(500).json({
+            message: "Something went wrong"
+        })
+    }
+}
+
+export const getMembers = async (req: Request, res: Response) => {
+    try {
+        const projectId = Number(req.params.id)
+
+        if (!Number.isInteger(projectId) || projectId <= 0) {
+            return res.status(400).json({
+                message: "Invalid project ID",
+            });
+        }
+
+        if (req.userId === undefined) {
+            return res.status(401).json({
+                message: "Authentication required",
+            });
+        }
+
+        const members = await getProjectMembers(
+            projectId,
+            req.userId
+        )
+
+        return res.status(200).json({
+            members,
+        });
+    } catch (error) {
+        if (
+            error instanceof Error &&
+            error.message === "Project does not exist"
+        ) {
+            return res.status(404).json({
+                message: error.message,
+            });
+        }
+
+        if (
+            error instanceof Error &&
+            error.message === "You are not a member of this project"
+        ) {
+            return res.status(403).json({
+                message: error.message,
+            });
+        }
+
+        return res.status(500).json({
+            message: "Something went wrong",
+        });
+    }
+}
+
+export const addMember = async (req:Request,res:Response)=>{
+    try{
+        const projectId = Number(req.params.id)
+        const {email} = req.body
+        const userId = req.userId
+        if(!Number.isInteger(projectId) || projectId <= 0){
+            return res.status(400).json({
+                message: "Invalid project ID"
+            })
+        }
+        if(userId === undefined){
+            return res.status(401).json({
+                message: "Authentication required"
+            })
+        }
+
+        const member = await addProjectMember({projectId,userId,email})
+
+        return res.status(201).json({
+            message: "Member added successfully",
+            member
+        })
+    } catch(error){
+        if (
+            error instanceof Error &&
+            error.message === "Project does not exist"
+        ) {
+            return res.status(404).json({
+                message: error.message,
+            });
+        }
+
+        if (
+            error instanceof Error &&
+            error.message === "You are not a member of this project"
+        ) {
+            return res.status(403).json({
+                message: error.message,
+            });
+        }
+
+        if (
+            error instanceof Error &&
+            error.message === "Only the project owner can add members"
+        ) {
+            return res.status(403).json({
+                message: error.message,
+            });
+        }
+
+        if (
+            error instanceof Error &&
+            error.message === "User does not exist"
+        ) {
+            return res.status(404).json({
+                message: error.message,
+            });
+        }
+
+        if (
+            error instanceof Error &&
+            error.message === "User is already a member of this project"
+        ) {
+            return res.status(409).json({
+                message: error.message,
+            });
+        }
+
+        return res.status(500).json({
+            message: "Something went wrong",
+        });
+    }
+}
+
+export const deleteMember = async (req: Request, res: Response) => {
+    try {
+        const projectId = Number(req.params.id);
+        const targetUserId = Number(req.params.userId);
+
+        if (!Number.isInteger(projectId) || projectId <= 0) {
+            return res.status(400).json({
+                message: "Invalid project ID",
+            });
+        }
+
+        if (!Number.isInteger(targetUserId) || targetUserId <= 0) {
+            return res.status(400).json({
+                message: "Invalid user ID",
+            });
+        }
+
+        if (req.userId === undefined) {
+            return res.status(401).json({
+                message: "Authentication required",
+            });
+        }
+
+        await removeProjectMember(
+            projectId,
+            req.userId,
+            targetUserId
+        );
+
+        return res.status(200).json({
+            message: "Member removed successfully",
+        });
+    } catch (error) {
+        if (
+            error instanceof Error &&
+            error.message === "Project does not exist"
+        ) {
+            return res.status(404).json({
+                message: error.message,
+            });
+        }
+
+        if (
+            error instanceof Error &&
+            error.message === "You are not a member of this project"
+        ) {
+            return res.status(403).json({
+                message: error.message,
+            });
+        }
+
+        if (
+            error instanceof Error &&
+            error.message === "Only the project owner can remove members"
+        ) {
+            return res.status(403).json({
+                message: error.message,
+            });
+        }
+
+        if (
+            error instanceof Error &&
+            error.message === "User is not a member of this project"
+        ) {
+            return res.status(404).json({
+                message: error.message,
+            });
+        }
+
+        if (
+            error instanceof Error &&
+            error.message === "Project owner cannot be removed"
+        ) {
+            return res.status(400).json({
+                message: error.message,
+            });
+        }
+
+        return res.status(500).json({
+            message: "Something went wrong",
+        });
+    }
+};

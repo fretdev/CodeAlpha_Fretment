@@ -16,3 +16,37 @@ AAuthorization: Bearer YOUR_ACCESS_TOKEN
 ### Get Project
 GET http://localhost:5000/api/projects/1
 Authorization: Bearer YOUR_ACCESS_TOKEN
+
+### Update project
+PATCH http://localhost:5000/api/projects/1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "name": "Fretment Development v2",
+  "description": "A global grade task management platform"
+}
+
+### Delete project
+DELETE http://localhost:5000/api/projects/2
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+### Get project members
+GET http://localhost:5000/api/projects/1/members
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+### Add project member
+POST http://localhost:5000/api/projects/1/members
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "email": "sarah@example.com"
+}
+
+### Delete project member
+DELETE http://localhost:5000/api/projects/1/members/2
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json

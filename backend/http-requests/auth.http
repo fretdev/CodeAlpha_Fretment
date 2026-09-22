@@ -1,4 +1,4 @@
-### Register user
+### Register user1
 POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
@@ -6,6 +6,16 @@ Content-Type: application/json
     "username": "Ahmed",
     "email": "ahmed@example.com",
     "password": "password123"
+}
+
+### Register user2
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "Sarah",
+  "email": "sarah@example.com",
+  "password": "password123"
 }
 
 ### Login user
