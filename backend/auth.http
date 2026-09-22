@@ -16,3 +16,7 @@ Content-Type: application/json
     "email": "ahmed@example.com",
     "password": "password123"
 }
+
+### Get current Profile
+GET http://localhost:5000/api/auth/me
+Authorization:Bearer YOUR_ACCESS_TOKEN
