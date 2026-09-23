@@ -344,3 +344,49 @@ export const updateTask = async ({
 
     return updatedTask
 }
+
+export const deleteTask = async (
+    projectId: number,
+    taskId: number,
+    userId: number
+) => {
+    const project = await prisma.project.findUnique({
+        where: {
+            id: projectId
+        }
+    })
+
+    if (!project) {
+        throw new Error("Project does not exist")
+    }
+
+    const membership = await prisma.projectMember.findUnique({
+        where: {
+            projectId_userId: {
+                projectId,
+                userId
+            }
+        }
+    })
+
+    if (!membership) {
+        throw new Error("You are not a member of this project")
+    }
+
+    const task = await prisma.task.findFirst({
+        where: {
+            id: taskId,
+            projectId
+        }
+    })
+
+    if (!task) {
+        throw new Error("Task does not exist")
+    }
+
+    await prisma.task.delete({
+        where: {
+            id: taskId
+        }
+    })
+}

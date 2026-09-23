@@ -1,5 +1,5 @@
 import Router from "express"
-import { create,getTask,getTasks,update } from "./tasks.controller.js"
+import { create,getTask,getTasks,remove,update } from "./tasks.controller.js"
 import { authenticate } from "../../middleware/auth.js"
 import { validate } from "../../middleware/validate.js"
 import { createTaskSchema,updateTaskSchema } from "./tasks.schema.js"
@@ -28,6 +28,12 @@ router.patch(
     authenticate,
     validate(updateTaskSchema),
     update
+)
+
+router.delete(
+    "/:projectId/tasks/:taskId",
+    authenticate,
+    remove
 )
 
 export default router

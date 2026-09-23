@@ -1,6 +1,6 @@
 ### Create task
 POST http://localhost:5000/api/projects/1/tasks
-Authorization: Bearer YOUR_JWT_TOKEN 
+Authorization: Bearer YOUR_JWT_TOKEN
 Content-Type: application/json
 
 {
@@ -15,7 +15,7 @@ GET http://localhost:5000/api/projects/1/tasks
 Authorization: Bearer YOUR_JWT_TOKEN
 
 ### Get project task
-GET http://localhost:5000/api/projects/1/tasks/1
+GET http://localhost:5000/api/projects/1/tasks/2
 Authorization: Bearer YOUR_JWT_TOKEN
 
 ### Update project task
@@ -27,3 +27,8 @@ Content-Type: application/json
 {
     "status": "IN_PROGRESS"
 }
+
+### Delete project tasks
+
+DELETE http://localhost:5000/api/projects/1/tasks/1
+Authorization: Bearer YOUR_JWT_TOKEN
