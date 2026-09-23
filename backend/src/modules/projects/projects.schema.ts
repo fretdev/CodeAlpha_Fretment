@@ -21,7 +21,3 @@ export const updateProjectSchema = z
             message: "At least one field must be provided",
         }
     )
-
-export const addMemberSchema = z.object({
-    email: z.email()
-})

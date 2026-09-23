@@ -1,0 +1,3 @@
+### Get current Profile
+GET http://localhost:5000/api/users/me
+Authorization:Bearer YOUR_ACCESS_TOKEN
