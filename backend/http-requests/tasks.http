@@ -1,0 +1,29 @@
+### Create task
+POST http://localhost:5000/api/projects/1/tasks
+Authorization: Bearer YOUR_JWT_TOKEN 
+Content-Type: application/json
+
+{
+    "title": "Build login page",
+    "description": "Create the login interface",
+    "dueDate": "2026-10-01T12:00:00.000Z",
+    "assigneeId": 2
+}
+
+### Get project tasks
+GET http://localhost:5000/api/projects/1/tasks
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Get project task
+GET http://localhost:5000/api/projects/1/tasks/1
+Authorization: Bearer YOUR_JWT_TOKEN
+
+### Update project task
+
+PATCH http://localhost:5000/api/projects/1/tasks/1
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+    "status": "IN_PROGRESS"
+}
