@@ -5,6 +5,7 @@ import usersRoutes from "./modules/users/users.routes.js"
 import projectRoutes from "./modules/projects/projects.routes.js"
 import membersRoutes from "./modules/members/members.routes.js"
 import tasksRoutes from "./modules/tasks/tasks.routes.js"
+import commentsRoutes from "./modules/comments/comments.routes.js"
 
 const app = express()
 
@@ -28,5 +29,7 @@ app.use("/api/projects",projectRoutes)
 app.use("/api/projects",membersRoutes)
 
 app.use("/api/projects",tasksRoutes)
+
+app.use("/api/projects", commentsRoutes)
 
 export default app

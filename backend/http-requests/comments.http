@@ -1,0 +1,28 @@
+### Create comment
+
+POST http://localhost:5000/api/projects/1/tasks/2/comments
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+    "content": "I'll handle the login page."
+}
+
+### Get comments
+
+GET http://localhost:5000/api/projects/1/tasks/2/comments
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json 
+
+### Update comment
+PATCH http://localhost:5000/api/projects/1/tasks/2/comments/1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+    "content": "I'll build the login page and handle the validation."
+}
+
+### Delete comment
+DELETE http://localhost:5000/api/projects/1/tasks/2/comments/1
+Authorization: Bearer YOUR_ACCESS_TOKEN
