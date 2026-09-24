@@ -1,0 +1,4 @@
+### Get Notifications
+
+GET http://localhost:5000/api/notifications
+Authorization: Bearer YOUR_ACCESS_TOKEN
