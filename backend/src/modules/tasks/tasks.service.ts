@@ -1,5 +1,6 @@
-import { title } from "node:process";
 import prisma from "../../config/prisma.js";
+import { NotificationType } from "../../generated/prisma/enums.js";
+import { createNotification } from "../notifications/notifications.service.js";
 
 type CreateTaskDetails  = {
     projectId: number;
@@ -95,6 +96,15 @@ export const createTask = async ({projectId,creatorId,title,description,dueDate,
         }
     }
    })
+   if(assigneeId !== undefined){
+    await createNotification({
+        type:NotificationType.TASK_ASSIGNED,
+        message: `${task.creator.username} assigned you a task: ${task.title}`,
+        referenceId: task.id,
+        userId: assigneeId,
+        actorId: creatorId
+    })
+   }
    return task
 }
 
