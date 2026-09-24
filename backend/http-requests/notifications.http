@@ -1,4 +1,16 @@
 ### Get Notifications
-
 GET http://localhost:5000/api/notifications
+Authorization: Bearer YOUR_ACCESS_TOKEN
+
+
+### Mark notification read
+PATCH http://localhost:5000/api/notifications/1/read
+Authorization: Bearer YOUR_ACCESS_TOKEN
+
+### Mark notification Unread
+PATCH http://localhost:5000/api/notifications/1/unread
+Authorization: Bearer YOUR_ACCESS_TOKEN
+
+### Mark all notifications read
+PATCH http://localhost:5000/api/notifications/read-all
 Authorization: Bearer YOUR_ACCESS_TOKEN

@@ -49,3 +49,93 @@ export const getNotifications = async (userId:number)=>{
     })
     return notifications
 }
+
+export const markNotificationAsRead = async (notificationId:number,userId:number)=>{
+    const notification = await prisma.notification.findFirst({
+        where:{
+            id:notificationId,
+            userId
+        }
+    })
+
+    if(!notification){
+        throw new Error("Notification does not exist")
+    }
+
+    const updatedNotification = await prisma.notification.update({
+        where:{
+            id:notificationId
+        },
+        data: {
+            isRead: true
+        },
+        select:{
+            id: true,
+            type: true,
+            message: true,
+            referenceId: true,
+            isRead: true,
+            createdAt: true,
+            actor:{
+                select:{
+                    id:true,
+                    username:true,
+                    avatarUrl: true,
+                }
+            }
+        }
+    })
+
+    return updatedNotification
+}
+
+export const markNotificationAsUnread = async (notificationId:number,userId:number)=>{
+    const notification = await prisma.notification.findFirst({
+        where:{
+            id:notificationId,
+            userId
+        }
+    })
+
+    if(!notification){
+        throw new Error("Notification does not exist")
+    }
+
+    const updatedNotification = await prisma.notification.update({
+        where:{
+            id:notificationId
+        },
+        data: {
+            isRead: false
+        },
+        select:{
+            id: true,
+            type: true,
+            message: true,
+            referenceId: true,
+            isRead: true,
+            createdAt: true,
+            actor:{
+                select:{
+                    id:true,
+                    username:true,
+                    avatarUrl: true,
+                }
+            }
+        }
+    })
+
+    return updatedNotification
+}
+
+export const markAllNotificationAsRead = async (userId:number)=>{
+    const result = await prisma.notification.updateMany({
+        where: {
+            userId
+        },
+        data:{
+            isRead: true
+        }
+    })
+    return result
+}
