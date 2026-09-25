@@ -1,10 +1,10 @@
 ### Create task
-POST http://localhost:5000/api/projects/1/tasks
+POST http://localhost:5000/api/projects/4/tasks
 Authorization: Bearer YOUR_JWT_TOKEN
 Content-Type: application/json
 
 {
-    "title": "Build login page",
+    "title": "Build SASS login page",
     "description": "Create the login interface",
     "dueDate": "2026-10-01T12:00:00.000Z",
     "assigneeId": 2
@@ -20,7 +20,7 @@ Authorization: Bearer YOUR_JWT_TOKEN
 
 ### Update project task
 
-PATCH http://localhost:5000/api/projects/1/tasks/1
+PATCH http://localhost:5000/api/projects/4/tasks/5
 Authorization: Bearer YOUR_JWT_TOKEN
 Content-Type: application/json
 

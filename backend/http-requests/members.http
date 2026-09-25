@@ -4,12 +4,12 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
 
 ### Add project member
-POST http://localhost:5000/api/projects/1/members
+POST http://localhost:5000/api/projects/4/members
 Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
 
 {
-  "email": "sarah@example.com"
+  "email": "james@example.com"
 }
 
 ### Delete project member

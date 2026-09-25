@@ -4,9 +4,9 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 Content-Type: application/json
 
 {
-  "name": "Fretment Development",
-  "description": "Building the Fretment project management platform",
-  "color": "#571244"
+  "name": "Build database SAAS",
+  "description": "Building the next database SASS application for AI labs",
+  "color": "#571246"
 }
 
 ### Get my projects
