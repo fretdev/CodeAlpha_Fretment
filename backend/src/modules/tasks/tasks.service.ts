@@ -240,7 +240,6 @@ type UpdateTaskDetails = {
     dueDate?: string
     assigneeId?: number
 }
-
 export const updateTask = async ({
     projectId,
     taskId,
@@ -286,6 +285,10 @@ export const updateTask = async ({
         throw new Error("Task does not exist")
     }
 
+    const  assigneeChanged = assigneeId !== undefined && assigneeId !== task.assigneeId
+
+    const statusChanged = status !== undefined && status !== task.status
+
     if (assigneeId !== undefined) {
         const assignee = await prisma.user.findUnique({
             where: {
@@ -311,6 +314,18 @@ export const updateTask = async ({
         }
     }
 
+    const actor = await prisma.user.findUnique({
+        where:{
+            id:userId
+        },
+        select:{
+            username: true
+        }
+    })
+
+    if(!actor){
+        throw new Error("User does not exist")
+    }
     const updatedTask = await prisma.task.update({
         where: {
             id: taskId
@@ -351,9 +366,29 @@ export const updateTask = async ({
             }
         }
     })
+    if(assigneeChanged && assigneeId !== undefined && assigneeId !== userId){
+        await createNotification({
+            type:NotificationType.TASK_ASSIGNED,
+            message: `${actor.username} assigned you a task: ${updatedTask.title}`,
+            referenceId: updatedTask.id,
+            userId: assigneeId,
+            actorId: userId
+        })
+    }
+
+    if(statusChanged && status !== undefined && updatedTask.assignee && updatedTask.assignee.id !== userId){
+        await createNotification({
+            type:NotificationType.TASK_STATUS_CHANGED,
+            message:`${actor.username} changed the status of "${updatedTask.title}" to ${updatedTask.status}`,
+            referenceId: updatedTask.id,
+            userId:updatedTask.assignee.id,
+            actorId: userId
+        })
+    }
 
     return updatedTask
 }
+
 
 export const deleteTask = async (
     projectId: number,

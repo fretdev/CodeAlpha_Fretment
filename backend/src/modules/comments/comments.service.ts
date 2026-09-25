@@ -1,4 +1,6 @@
 import prisma from "../../config/prisma.js"
+import { createNotification } from "../notifications/notifications.service.js"
+import { NotificationType } from "../../generated/prisma/enums.js"
 
 export const createComment = async (
     projectId: number,
@@ -62,6 +64,41 @@ export const createComment = async (
         }
     })
 
+    const previouscomments = await prisma.comment.findMany({
+        where:{
+            taskId,
+            authorId: {
+                not: userId
+            }
+        },
+        select:{
+            authorId: true
+        },
+        distinct:["authorId"]
+    })
+
+    const recipientsIds = new Set<number>()
+
+    if(task.creatorId !== userId){
+        recipientsIds.add(task.creatorId)
+    }
+    if(task.assigneeId && task.assigneeId !== userId){
+        recipientsIds.add(task.assigneeId)
+    }
+
+    for (const previouscomment of previouscomments){
+        recipientsIds.add(previouscomment.authorId)
+    }
+
+    await Promise.all([...recipientsIds].map(recipientId =>
+        createNotification({
+            type: NotificationType.COMMENT_ADDED,
+            message: `${comment.author.username} commented on "${task.title}"`,
+            referenceId: comment.id,
+            userId: recipientId,
+            actorId: userId
+        })
+    ))
     return comment
 }
 

@@ -1,4 +1,6 @@
 import prisma from "../../config/prisma.js";
+import { NotificationType } from "../../generated/prisma/enums.js";
+import { createNotification } from "../notifications/notifications.service.js";
 
 
 type AddMemberDetails = {
@@ -70,7 +72,12 @@ export const addProjectMember = async ({projectId,userId,email}:AddMemberDetails
             }
         },
         select: {
-            role: true
+            role: true,
+            user:{
+                select:{
+                    username:true
+                }
+            }
         }
     })
     if(!membership){
@@ -122,6 +129,13 @@ export const addProjectMember = async ({projectId,userId,email}:AddMemberDetails
                 }
             }
         }
+    })
+    await createNotification({
+        type: NotificationType.PROJECT_MEMBER_ADDED,
+        message: `${membership.user.username} added you to this project "${project.name}"`,
+        referenceId: projectId,
+        userId: user.id,
+        actorId: userId
     })
 
     return member
