@@ -1,5 +1,6 @@
 import prisma from "../../config/prisma.js"
 import { NotificationType } from "../../generated/prisma/enums.js"
+import { emitToUser } from "../sockets/socket.js"
 
 type CreateNotificationDetails = {
     type: NotificationType;
@@ -19,6 +20,8 @@ export const createNotification = async({type,message,referenceId,userId,actorId
             actorId
         }
     })
+
+    emitToUser(userId,"notification",notification)
 
     return notification
 }

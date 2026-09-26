@@ -4,7 +4,7 @@ Authorization: Bearer YOUR_JWT_TOKEN
 Content-Type: application/json
 
 {
-    "title": "Build SASS login page",
+    "title": "Build RASS login page",
     "description": "Create the login interface",
     "dueDate": "2026-10-01T12:00:00.000Z",
     "assigneeId": 2
