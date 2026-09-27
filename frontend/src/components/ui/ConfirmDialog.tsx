@@ -15,6 +15,7 @@ interface ConfirmDialogProps {
   cancelText?: string;
   variant?: "danger" | "primary";
   isLoading?: boolean;
+  icon?: React.ReactNode;
 }
 
 export function ConfirmDialog({
@@ -27,6 +28,7 @@ export function ConfirmDialog({
   cancelText = "Cancel",
   variant = "danger",
   isLoading = false,
+  icon,
 }: ConfirmDialogProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
@@ -38,7 +40,7 @@ export function ConfirmDialog({
               : "bg-[#588157]/10 text-[#344E41] border border-[#588157]/30"
           }`}
         >
-          <AlertTriangle className="h-4 w-4" />
+          {icon || <AlertTriangle className="h-4 w-4" />}
         </div>
         <div className="space-y-1">
           <h3 className="text-sm sm:text-base font-bold text-[#20251F]">{title}</h3>

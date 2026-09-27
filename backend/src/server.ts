@@ -3,7 +3,6 @@ import app from "./app.js";
 import prisma from "./config/prisma.js"
 import { createServer } from "http"
 import { initializeSocket } from "./modules/sockets/socket.js"
-import "./types/express.js";
 
 const PORT = process.env.PORT || 5000;
 

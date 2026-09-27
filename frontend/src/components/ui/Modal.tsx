@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,22 +21,59 @@ export function Modal({
   children,
   size = "md",
 }: ModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
+      if (!isOpen) return;
+
+      if (e.key === "Escape") {
         onClose();
+        return;
+      }
+
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
+        );
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
       }
     };
 
     if (isOpen) {
       document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
-    }
 
-    return () => {
-      document.body.style.overflow = "unset";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+      const focusTimer = setTimeout(() => {
+        if (dialogRef.current) {
+          const focusable = dialogRef.current.querySelector<HTMLElement>(
+            'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
+          );
+          focusable?.focus();
+        }
+      }, 50);
+
+      return () => {
+        clearTimeout(focusTimer);
+        document.body.style.overflow = "unset";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -57,10 +94,12 @@ export function Modal({
       />
 
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
+        tabIndex={-1}
         className={cn(
-          "relative w-full bg-[#FFFCED] rounded-lg shadow-xl border border-[#D8D8C8] overflow-hidden transform transition-all duration-200 z-10 my-8",
+          "relative w-full bg-[#FFFCED] rounded-lg shadow-xl border border-[#D8D8C8] overflow-hidden transform transition-all duration-200 z-10 my-8 focus:outline-none",
           sizeClasses[size]
         )}
       >
@@ -78,7 +117,7 @@ export function Modal({
             </div>
             <button
               onClick={onClose}
-              className="text-[#6B7369] hover:text-[#20251F] rounded p-1 hover:bg-[#FFF8D6] transition-colors cursor-pointer"
+              className="text-[#6B7369] hover:text-[#20251F] rounded p-1 hover:bg-[#FFF8D6] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#588157]"
               aria-label="Close dialog"
             >
               <X className="w-4 h-4" />
@@ -89,7 +128,7 @@ export function Modal({
         {!title && !description && (
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-[#6B7369] hover:text-[#20251F] rounded p-1 hover:bg-[#FFF8D6] transition-colors cursor-pointer z-10"
+            className="absolute top-4 right-4 text-[#6B7369] hover:text-[#20251F] rounded p-1 hover:bg-[#FFF8D6] transition-colors cursor-pointer z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#588157]"
             aria-label="Close dialog"
           >
             <X className="w-4 h-4" />

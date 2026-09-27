@@ -1,16 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Avatar } from "@/components/ui/Avatar";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useAuth } from "@/context/AuthContext";
 import { formatDate } from "@/lib/utils";
 import { Mail, Calendar, LogOut } from "lucide-react";
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -66,7 +68,7 @@ export default function ProfilePage() {
             <Button
               variant="danger"
               size="sm"
-              onClick={logout}
+              onClick={() => setIsLogoutConfirmOpen(true)}
               leftIcon={<LogOut className="w-3.5 h-3.5" />}
             >
               Sign Out of Session
@@ -74,6 +76,18 @@ export default function ProfilePage() {
           </div>
         </Card>
       </div>
+
+      <ConfirmDialog
+        isOpen={isLogoutConfirmOpen}
+        onClose={() => setIsLogoutConfirmOpen(false)}
+        onConfirm={logout}
+        title="Log Out"
+        message="Are you sure you want to log out?"
+        confirmText="Log out"
+        cancelText="Cancel"
+        variant="danger"
+        icon={<LogOut className="h-4 w-4" />}
+      />
     </div>
   );
 }
