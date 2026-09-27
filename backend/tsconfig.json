@@ -13,6 +13,7 @@
     "declaration": true,
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
+  "files": ["src/types/express.d.ts"],
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
