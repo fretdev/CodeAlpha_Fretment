@@ -86,7 +86,7 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Username"
-            placeholder="johndoe"
+            placeholder="Your name"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
@@ -99,7 +99,7 @@ export default function RegisterPage() {
           <Input
             label="Email Address"
             type="email"
-            placeholder="developer@example.com"
+            placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -110,7 +110,7 @@ export default function RegisterPage() {
           <Input
             label="Password"
             type="password"
-            placeholder="At least 8 characters"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

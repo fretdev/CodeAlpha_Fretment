@@ -72,7 +72,7 @@ export default function LoginPage() {
           <Input
             label="Email Address"
             type="email"
-            placeholder="developer@example.com"
+            placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -83,7 +83,7 @@ export default function LoginPage() {
           <Input
             label="Password"
             type="password"
-            placeholder="••••••••"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

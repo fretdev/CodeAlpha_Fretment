@@ -97,7 +97,7 @@ export function MembersModal({
                 <div className="flex-1">
                   <Input
                     type="email"
-                    placeholder="teammate@example.com"
+                    placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
