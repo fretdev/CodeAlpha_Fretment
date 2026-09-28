@@ -64,30 +64,22 @@ export const createComment = async (
         }
     })
 
-    const previouscomments = await prisma.comment.findMany({
-        where:{
-            taskId,
-            authorId: {
+    const projectMembers = await prisma.projectMember.findMany({
+        where: {
+            projectId,
+            userId: {
                 not: userId
             }
         },
-        select:{
-            authorId: true
-        },
-        distinct:["authorId"]
+        select: {
+            userId: true
+        }
     })
 
     const recipientsIds = new Set<number>()
 
-    if(task.creatorId !== userId){
-        recipientsIds.add(task.creatorId)
-    }
-    if(task.assigneeId && task.assigneeId !== userId){
-        recipientsIds.add(task.assigneeId)
-    }
-
-    for (const previouscomment of previouscomments){
-        recipientsIds.add(previouscomment.authorId)
+    for (const member of projectMembers) {
+        recipientsIds.add(member.userId)
     }
 
     await Promise.all([...recipientsIds].map(recipientId =>

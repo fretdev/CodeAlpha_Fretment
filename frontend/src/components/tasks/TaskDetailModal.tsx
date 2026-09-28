@@ -12,6 +12,7 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Comment, ProjectMemberItem, Task, TaskPriority, TaskStatus } from "@/lib/types";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+import { useNotifications } from "@/context/NotificationContext";
 import { formatDate } from "@/lib/utils";
 import {
   Calendar,
@@ -43,6 +44,7 @@ export function TaskDetailModal({
   onOpenEditModal,
 }: TaskDetailModalProps) {
   const { user: currentUser } = useAuth();
+  const { lastEventTimestamp } = useNotifications();
   const [task, setTask] = useState<Task | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
@@ -57,6 +59,17 @@ export function TaskDetailModal({
       setComments([]);
     }
   }, [isOpen, taskId]);
+
+  useEffect(() => {
+    if (isOpen && taskId && lastEventTimestamp) {
+      api.comments
+        .list(projectId, taskId)
+        .then((fetchedComments) => {
+          setComments(fetchedComments);
+        })
+        .catch((err) => console.error("Failed to sync comments:", err));
+    }
+  }, [lastEventTimestamp, isOpen, projectId, taskId]);
 
   const loadTaskAndComments = async () => {
     if (!taskId) return;
